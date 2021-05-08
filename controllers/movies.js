@@ -10,7 +10,6 @@ const getMovies = (req, res, next) => {
 };
 
 const createMovie = (req, res, next) => {
-  console.log(req.body);
   Movie.create({ ...req.body, owner: req.user._id })
     .then((movie) => {
       res.send({ data: movie });
@@ -20,10 +19,8 @@ const createMovie = (req, res, next) => {
 
 const deleteMovie = (req, res, next) => {
   let movieId = req.params.movieId;
-  console.log(movieId);
   Movie.findOne({ movieId })
     .then((movie) => {
-      console.log(movie);
       if (movie === null) {
         throw new NotFoundError('Фильм не найден');
       }
