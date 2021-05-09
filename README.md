@@ -1,5 +1,5 @@
 # Дипломная работа
 
-IP-адрес сервера : 178.154.207.131
+IP-адрес сервера : 178.154.203.255
 
-Домен: http://domainname.ilona.nomoredomains.icu/
+Поддомен: https://api.domainname.ilona.nomoredomains.club
