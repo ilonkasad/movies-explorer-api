@@ -1,5 +1,6 @@
 const routerMovies = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
+const { default: validator } = require('validator');
 
 const {
   getMovies,
@@ -24,24 +25,31 @@ routerMovies.post(
           .messages({ 'string.empty': 'Год выпуска фильма указан некорректно' }),
         description: Joi.string().required()
           .messages({ 'string.empty': 'Описание фильма указано некорректно' }),
-        image: Joi.string().pattern(new RegExp(/(http|https):\/\/(www\.)?(\S+)\.([a-zA-Z])+(\/)?(\w-\._~:\/\?#\[\]@!\$&’\(\)\*\+,;=)?/))
-          .messages({
-            'string.empty': 'Не указана ссылка для постера к фильму',
-          }),
-        trailer: Joi.string().pattern(new RegExp(/(http|https):\/\/(www\.)?(\S+)\.([a-zA-Z])+(\/)?(\w-\._~:\/\?#\[\]@!\$&’\(\)\*\+,;=)?/))
-          .messages({
-            'string.empty': 'Не указана ссылка на трейлер к фильму',
-          }),
-        thumbnail: Joi.string().pattern(new RegExp(/(http|https):\/\/(www\.)?(\S+)\.([a-zA-Z])+(\/)?(\w-\._~:\/\?#\[\]@!\$&’\(\)\*\+,;=)?/))
-          .messages({
-            'string.empty': 'Не указана ссылка на трейлер к фильму',
-          }),
-        movieId: Joi.string().required()
+
+        image: Joi.string().required().custom((value, helpers) => {
+          if (validator.isURL(value)) {
+            return value;
+          }
+          return helpers.message('Не указана ссылка для постера к фильму');
+        }),
+        trailer: Joi.string().required().custom((value, helpers) => {
+          if (validator.isURL(value)) {
+            return value;
+          }
+          return helpers.message('Не указана ссылка на трейлер к фильму');
+        }),
+        thumbnail: Joi.string().required().custom((value, helpers) => {
+          if (validator.isURL(value)) {
+            return value;
+          }
+          return helpers.message('Не указана ссылка на миниатюрное изображение постера к фильму');
+        }),
+        movieId: Joi.number().required()
           .messages({ 'string.empty': 'некорректная длина id фильма' }),
         nameRU: Joi.string().required()
-          .messages({ 'string.empty': 'Страна создания фильма указана некорректно' }),
+          .messages({ 'string.empty': 'Наименование фильма указано некорректно' }),
         nameEN: Joi.string().required()
-          .messages({ 'string.empty': 'Страна создания фильма указана некорректно' }),
+          .messages({ 'string.empty': 'Наименование фильма указано некорректно' }),
       })
       .unknown(true),
   }),
@@ -49,11 +57,11 @@ routerMovies.post(
 );
 
 routerMovies.delete(
-  '/movies/:movieId',
+  '/movies/:_id',
   celebrate({
     params: Joi.object()
       .keys({
-        movieId: Joi.string().required()
+        _id: Joi.string().required()
           .messages({ 'string.empty': 'Страна создания фильма указана некорректно' }),
       })
       .unknown(true),

@@ -1,7 +1,7 @@
 const Movie = require('../models/movie');
 const NotFoundError = require('../errors/not-found-err');
 const QueryError = require('../errors/query-err');
-const DelError = require('../errors/del-err');
+const ForbiddenError = require('../errors/forbidden-err');
 
 const getMovies = (req, res, next) => {
   Movie.find({})
@@ -18,21 +18,20 @@ const createMovie = (req, res, next) => {
 };
 
 const deleteMovie = (req, res, next) => {
-  let movieId = req.params.movieId;
-  Movie.findOne({ movieId })
+  console.log(req.body);
+  Movie.findById(req.params._id)
     .then((movie) => {
       if (movie === null) {
         throw new NotFoundError('Фильм не найден');
       }
       if (movie.owner.toString() !== req.user._id.toString()) {
-        throw new DelError('Невозможно удалить фильм');
+        throw new ForbiddenError('Невозможно удалить фильм');
       }
-      Movie.findOneAndRemove(movieId)
+      movie.remove()
         .then((mve) => {
           res.send({ data: mve });
         })
         .catch((err) => { next(err); })
-        .catch(next);
     })
     .catch((err) => {
       if (err.kind === 'ObjectId') {

@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-err');
 const QueryError = require('../errors/not-found-err');
-const DuplicationError = require('../errors/duplication-err');
+const ConflictError = require('../errors/conflict-err');
 const AuthError = require('../errors/auth-err');
 
 const MONGO_DUPLICATE_ERR_CODE = 11000;
@@ -50,8 +50,8 @@ const createProfile = (req, res, next) => {
         throw new QueryError('Неправильный id');
       }
       if (err.code === MONGO_DUPLICATE_ERR_CODE) {
-        throw new DuplicationError(
-          'Пользователь с таким id уже зарегистрирован',
+        throw new ConflictError(
+          'Пользователь с таким email уже зарегистрирован',
         );
       }
       next(err);
@@ -83,6 +83,11 @@ const updateProfile = (req, res, next) => {
   )
     .then((user) => res.send({ data: user }))
     .catch((err) => {
+      if (err.code === MONGO_DUPLICATE_ERR_CODE) {
+        throw new ConflictError(
+          'Нельзя обновить данные другого пользователя',
+        );
+      }
       if (err.name === 'ValidationError') {
         throw new QueryError('Ошибка валидации');
       }
