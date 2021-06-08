@@ -1,10 +1,11 @@
+/* eslint-disable no-console */
 /* eslint-disable arrow-body-style */
 const { NODE_ENV, JWT_SECRET } = process.env;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-err');
-const QueryError = require('../errors/not-found-err');
+const QueryError = require('../errors/query-err');
 const ConflictError = require('../errors/conflict-err');
 const AuthError = require('../errors/auth-err');
 

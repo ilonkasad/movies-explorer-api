@@ -20,14 +20,19 @@ const options = {
   origin: [
     'https://localhost:3000',
     'http://localhost:3000',
-    // 'https://domainname.student.ilona.nomoredomains.monster',
-    // 'http://domainname.student.ilona.nomoredomains.monster',
+    'https://localhost:3001',
+    'http://localhost:3001',
+    'https://domainname.student.ilona.nomoredomains.monster',
+    'http://domainname.student.ilona.nomoredomains.monster',
     'https://ilonkasad.github.io',
   ],
   credentials: true, // эта опция позволяет устанавливать куки
 };
 
 app.use(helmet());
+
+app.use(requestLogger);
+
 app.use(limiter);
 
 mongoose.connect(mongoUrl, {
@@ -40,8 +45,6 @@ app.use('*', cors(options));
 
 app.use(bodyParser.json());
 
-app.use(requestLogger);
-
 app.use('/', mainRouter);
 
 app.use('*', () => {
@@ -52,11 +55,12 @@ app.use(errorLogger);
 
 app.use(errors()); // обработчик ошибок celebrate
 
-app.use((err, req, res) => {
+app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
   res.status(statusCode).send({
     message: statusCode === 500 ? 'На сервере произошла ошибка' : message,
   });
+  next();
 });
 
 app.listen(PORT, () => {

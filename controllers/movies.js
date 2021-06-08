@@ -5,7 +5,9 @@ const ForbiddenError = require('../errors/forbidden-err');
 
 const getMovies = (req, res, next) => {
   Movie.find({})
-    .then((movies) => res.send(movies))
+    .then((movies) => {
+      res.send(movies.filter((m) => m.owner.toString() === req.user._id.toString()));
+    })
     .catch(next);
 };
 
@@ -18,8 +20,8 @@ const createMovie = (req, res, next) => {
 };
 
 const deleteMovie = (req, res, next) => {
-  console.log(req.body);
-  Movie.findById(req.params._id)
+  const { movieId } = req.params;
+  Movie.findOne({ movieId })
     .then((movie) => {
       if (movie === null) {
         throw new NotFoundError('Фильм не найден');
@@ -31,7 +33,7 @@ const deleteMovie = (req, res, next) => {
         .then((mve) => {
           res.send({ data: mve });
         })
-        .catch((err) => { next(err); })
+        .catch((err) => { next(err); });
     })
     .catch((err) => {
       if (err.kind === 'ObjectId') {

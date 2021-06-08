@@ -57,12 +57,12 @@ routerMovies.post(
 );
 
 routerMovies.delete(
-  '/movies/:_id',
+  '/movies/:movieId',
   celebrate({
     params: Joi.object()
       .keys({
-        _id: Joi.string().required()
-          .messages({ 'string.empty': 'Страна создания фильма указана некорректно' }),
+        movieId: Joi.number().required()
+          .messages({ 'string.empty': 'Id фильма указан некорректно' }),
       })
       .unknown(true),
   }),
