@@ -17,16 +17,16 @@ const { PORT = 3000 } = process.env;
 // const mongoUrl = process.env.NODE_ENV === 'production' ? process.env.MONGO_URL : 'mongodb://localhost:27017/bitfilmsdb';
 const mongoUrl = 'mongodb://localhost:27017/bitfilmsdb';
 
-// const options = {
-//   origin: [
-//     'https://localhost:3000',
-//     'http://localhost:3000',
-//     'https://domainname.ilona.nomoredomains.icu',
-//     'http://domainname.ilona.nomoredomains.icu',
-//     'https://ilonkasad.github.io',
-//   ],
-//   credentials: true, // эта опция позволяет устанавливать куки
-// };
+const options = {
+  origin: [
+    'https://localhost:3000',
+    'http://localhost:3000',
+    'https://domainname.ilona.nomoredomains.icu',
+    'http://domainname.ilona.nomoredomains.icu',
+    'https://ilonkasad.github.io',
+  ],
+  credentials: true, // эта опция позволяет устанавливать куки
+};
 
 app.use(helmet());
 
@@ -40,9 +40,9 @@ mongoose.connect(mongoUrl, {
   useFindAndModify: false,
 });
 
-// app.use('*', cors(options));
+app.use('*', cors(options));
 
-app.use(cors({ origin: ['https://domainname.ilona.nomoredomains.icu', 'http://domainname.ilona.nomoredomains.icu'], credentials: true }));
+// app.use(cors({ origin: ['https://domainname.ilona.nomoredomains.icu', 'http://domainname.ilona.nomoredomains.icu'], credentials: true }));
 
 app.use(bodyParser.json());
 
