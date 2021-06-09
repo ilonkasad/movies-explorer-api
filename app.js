@@ -28,6 +28,12 @@ const mongoUrl = 'mongodb://localhost:27017/bitfilmsdb';
 //   credentials: true, // эта опция позволяет устанавливать куки
 // };
 
+mongoose.connect(mongoUrl, {
+  useNewUrlParser: true,
+  useCreateIndex: true,
+  useFindAndModify: false,
+});
+
 const corsWhiteList = ['http://domainname.ilona.nomoredomains.icu', 'https://domainname.ilona.nomoredomains.icu'];
 const corsOptions = {
   origin: (origin, callback) => {
@@ -44,12 +50,6 @@ app.use(helmet());
 app.use(requestLogger);
 
 app.use(limiter);
-
-mongoose.connect(mongoUrl, {
-  useNewUrlParser: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
-});
 
 // app.use('*', cors(options));
 app.use((req, res, next) => {
