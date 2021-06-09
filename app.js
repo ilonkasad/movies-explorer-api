@@ -16,13 +16,18 @@ const app = express();
 const { PORT = 3000 } = process.env;
 // const mongoUrl = process.env.NODE_ENV === 'production' ? process.env.MONGO_URL : 'mongodb://localhost:27017/bitfilmsdb';
 const mongoUrl = 'mongodb://localhost:27017/bitfilmsdb';
-
-const options = {
+const corsOptions = {
+  // домены у которые могут общаться с сервером
   origin: [
+    'http://localhost:3000',
     'http://domainname.ilona.nomoredomains.icu',
     'https://domainname.ilona.nomoredomains.icu',
   ],
-  credentials: true, // эта опция позволяет устанавливать куки
+  methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE'],
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+  allowedHeaders: ['Content-Type', 'origin'],
+  credentials: true, // если нужно отправлять куки
 };
 
 mongoose.connect(mongoUrl, {
@@ -30,18 +35,7 @@ mongoose.connect(mongoUrl, {
   useCreateIndex: true,
   useFindAndModify: false,
 });
-app.use('*', cors(options));
-
-// const corsWhiteList = ['http://domainname.ilona.nomoredomains.icu', 'https://domainname.ilona.nomoredomains.icu'];
-// const corsOptions = {
-//   origin: (origin, callback) => {
-//     if (corsWhiteList.indexOf(origin) !== -1) {
-//       callback(null, true);
-//     }
-//   },
-//   credentials: true,
-// };
-// app.use(cors(corsOptions));
+app.use('*', cors(corsOptions));
 
 app.use(helmet());
 
