@@ -26,7 +26,7 @@ const corsOptions = {
   methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE'],
   preflightContinue: false,
   optionsSuccessStatus: 204,
-  allowedHeaders: ['Content-Type', 'origin'],
+  allowedHeaders: ['origin'],
   credentials: true, // если нужно отправлять куки
 };
 
@@ -35,7 +35,7 @@ mongoose.connect(mongoUrl, {
   useCreateIndex: true,
   useFindAndModify: false,
 });
-app.use('*', cors(corsOptions));
+app.use(cors(corsOptions));
 
 app.use(helmet());
 
