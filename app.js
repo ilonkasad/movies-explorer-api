@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const { errors } = require('celebrate');
-// const cors = require('cors');
+const cors = require('cors');
 const limiter = require('./rate-limit');
 const NotFoundError = require('./errors/not-found-err');
 const mainRouter = require('./routes/index');
@@ -28,6 +28,17 @@ const mongoUrl = 'mongodb://localhost:27017/bitfilmsdb';
 //   credentials: true, // эта опция позволяет устанавливать куки
 // };
 
+const corsWhiteList = ['http://domainname.ilona.nomoredomains.icu', 'https://domainname.ilona.nomoredomains.icu'];
+const corsOptions = {
+  origin: (origin, callback) => {
+    if (corsWhiteList.indexOf(origin) !== -1) {
+      callback(null, true);
+    }
+  },
+  credentials: true,
+};
+app.use(cors(corsOptions));
+
 app.use(helmet());
 
 app.use(requestLogger);
@@ -45,7 +56,7 @@ app.use((req, res, next) => {
   res.status(200);
   res.header(
     'Access-Control-Allow-Origin',
-    'http://domainname.ilona.nomoredomains.icu',
+    'http://localhost:3001',
   );
   res.header(
     'Access-Control-Allow-Headers',
