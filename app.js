@@ -52,20 +52,7 @@ app.use(requestLogger);
 app.use(limiter);
 
 // app.use('*', cors(options));
-app.use((req, res, next) => {
-  res.status(200);
-  res.header(
-    'Access-Control-Allow-Origin',
-    'http://localhost:3001',
-  );
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept, Authorization',
-  );
-  res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-  res.header('Access-Control-Allow-Credentials', 'true');
-  next();
-});
+
 // app.use(cors({ origin: ['https://domainname.ilona.nomoredomains.icu', 'http://domainname.ilona.nomoredomains.icu'], credentials: true }));
 
 app.use(bodyParser.json());
