@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 require('dotenv').config();
 const { errors } = require('celebrate');
-const cors = require('cors');
+// const cors = require('cors');
 const limiter = require('./rate-limit');
 const NotFoundError = require('./errors/not-found-err');
 const mainRouter = require('./routes/index');
@@ -17,16 +17,16 @@ const { PORT = 3000 } = process.env;
 // const mongoUrl = process.env.NODE_ENV === 'production' ? process.env.MONGO_URL : 'mongodb://localhost:27017/bitfilmsdb';
 const mongoUrl = 'mongodb://localhost:27017/bitfilmsdb';
 
-const options = {
-  origin: [
-    'https://localhost:3000',
-    'http://localhost:3000',
-    'https://domainname.ilona.nomoredomains.icu',
-    'http://domainname.ilona.nomoredomains.icu',
-    'https://ilonkasad.github.io',
-  ],
-  credentials: true, // эта опция позволяет устанавливать куки
-};
+// const options = {
+//   origin: [
+//     'https://localhost:3000',
+//     'http://localhost:3000',
+//     'https://domainname.ilona.nomoredomains.icu',
+//     'http://domainname.ilona.nomoredomains.icu',
+//     'https://ilonkasad.github.io',
+//   ],
+//   credentials: true, // эта опция позволяет устанавливать куки
+// };
 
 app.use(helmet());
 
@@ -40,8 +40,21 @@ mongoose.connect(mongoUrl, {
   useFindAndModify: false,
 });
 
-app.use('*', cors(options));
-
+// app.use('*', cors(options));
+app.use((req, res, next) => {
+  res.status(200);
+  res.header(
+    'Access-Control-Allow-Origin',
+    'http://domainname.ilona.nomoredomains.icu',
+  );
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization',
+  );
+  res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  next();
+});
 // app.use(cors({ origin: ['https://domainname.ilona.nomoredomains.icu', 'http://domainname.ilona.nomoredomains.icu'], credentials: true }));
 
 app.use(bodyParser.json());
