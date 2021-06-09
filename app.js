@@ -16,34 +16,43 @@ const app = express();
 const { PORT = 3000 } = process.env;
 // const mongoUrl = process.env.NODE_ENV === 'production' ? process.env.MONGO_URL : 'mongodb://localhost:27017/bitfilmsdb';
 const mongoUrl = 'mongodb://localhost:27017/bitfilmsdb';
-const corsOptions = {
-  // домены у которые могут общаться с сервером
-  origin: [
-    'http://localhost:3000',
-    'http://domainname.ilona.nomoredomains.icu',
-    'https://domainname.ilona.nomoredomains.icu',
-  ],
-  methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204,
-  allowedHeaders: ['origin'],
-  credentials: true, // если нужно отправлять куки
-};
+// const corsOptions = {
+//   // домены у которые могут общаться с сервером
+//   origin: [
+//     'http://localhost:3000',
+//     'http://domainname.ilona.nomoredomains.icu',
+//     'https://domainname.ilona.nomoredomains.icu',
+//   ],
+//   methods: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE'],
+//   preflightContinue: false,
+//   optionsSuccessStatus: 204,
+//   allowedHeaders: ['origin'],
+//   credentials: true, // если нужно отправлять куки
+// };
 
 mongoose.connect(mongoUrl, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
 });
-app.use(cors(corsOptions));
+
+app.use((req, res, next) => {
+  res.append('Access-Control-Allow-Origin', ['*']);
+  res.append('Access-Control-Expose-Headers', 'Set-Cookie');
+  res.append('Access-Control-Allow-Methods', 'GET, HEAD, PUT, PATCH, POST, DELETE');
+  res.append('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Set-Cookie');
+  next();
+});
+app.use(cors({
+  origin: true,
+  credentials: true,
+}));
 
 app.use(helmet());
 
 app.use(requestLogger);
 
 app.use(limiter);
-
-// app.use(cors({ origin: ['https://domainname.ilona.nomoredomains.icu', 'http://domainname.ilona.nomoredomains.icu'], credentials: true }));
 
 app.use(bodyParser.json());
 
