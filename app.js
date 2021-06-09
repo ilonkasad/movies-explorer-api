@@ -19,11 +19,8 @@ const mongoUrl = 'mongodb://localhost:27017/bitfilmsdb';
 
 const options = {
   origin: [
-    'https://localhost:3000',
-    'http://localhost:3000',
-    'https://domainname.ilona.nomoredomains.icu',
     'http://domainname.ilona.nomoredomains.icu',
-    'https://ilonkasad.github.io',
+    'https://domainname.ilona.nomoredomains.icu',
   ],
   credentials: true, // эта опция позволяет устанавливать куки
 };
