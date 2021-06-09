@@ -22,8 +22,8 @@ const options = {
     'http://localhost:3000',
     'https://localhost:3001',
     'http://localhost:3001',
-    'https://domainname.student.ilona.nomoredomains.monster',
-    'http://domainname.student.ilona.nomoredomains.monster',
+    'https://domainname.ilona.nomoredomains.icu',
+    'http://domainname.ilona.nomoredomains.icu',
     'https://ilonkasad.github.io',
   ],
   credentials: true, // эта опция позволяет устанавливать куки
